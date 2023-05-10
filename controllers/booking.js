@@ -8,7 +8,7 @@ class BookingHotel {
   getInformationHotel(req, res) {
     Hotel.find()
       .then((hotels) => {
-        console.log("hotels", hotels);
+        // console.log("hotels", hotels);
         res.status(200).json({
           message: "ok",
           hotels: hotels,
@@ -32,23 +32,28 @@ class BookingHotel {
     const where = req.body.where;
     const time = req.body.time;
     const numberOfPeople = req.body.numberOfPeople;
+    const numberOfRoom = req.body.numberOfRoom;
     Hotel.find()
       .populate('rooms')
       // .execPopulate() //return promise
       .then(hotels => {
         const place = where.toLowerCase();
+        // console.log(numberOfPeople);
         const result = hotels.filter(hotel => {
           try{
-          const match = hotel.address.toLowerCase().includes(place);
-          const number = hotel.rooms.some(room => room.maxPeople.toString() === numberOfPeople.toString())
-          if(match && number) {
-            return hotel;
-          }
+            const match = hotel.address.toLowerCase().includes(place);
+            const numbers = hotel.rooms.some(room => room.maxPeople >= +numberOfPeople);
+            const rooms = hotel.rooms.some(room => room.emptyRoom >= numberOfRoom);
+            // console.log('number', numbers);
+            if(match && numbers && rooms) {
+              return hotel;
+            }
+            // return 'Not found hotel!';
           }
           catch(err){
             console.log(err);
           }
-        })
+        });
         return result;
       })
       .then((result) => {
@@ -60,10 +65,11 @@ class BookingHotel {
   // 6. Search hotel
   getDetailHotel (req, res) {
     const hotelId = req.params.hotelId;
-    console.log('hotelId', hotelId)
-    Hotel.findOne(hotelId)
+    // console.log('hotelId', hotelId)
+    Hotel.findById(hotelId)
+      .populate('rooms')
       .then(hotel => {
-        console.log('hotel', hotel)
+        // console.log('hotel', hotel)
         res.status(200).json({ message: 'ok', hotel: hotel })
       })
       .catch(err => res.status(400).json({ message: err}))
@@ -78,10 +84,10 @@ class BookingHotel {
     const phoneNumber = req.body.phoneNumber;
     const identify = req.body.identify;
     const price = req.body.price;
-    const roomNumber = req.body.roomNumber;
-    const roomId = req.body.roomId;
+    const rooms = req.body.rooms;
     const payment = req.body.payment;
-    User.findOne({ email: email.toString()})
+    const hotelId = req.body.hotelId;
+    User.findOne({ email: email })
       .then(user => {
         if(user) {
             user.fullName = fullName;
@@ -95,19 +101,11 @@ class BookingHotel {
           startDate: startDate,
           endDate: endDate,
           price: price,
-          status: 'checkIn',
+          status: 'booked',
           payment: payment,
-          rooms: [
-            {
-              roomId: roomId,
-              roomNumber: roomNumber
-            }
-          ],
-          user: [
-            {
-              userId: user._id
-            }
-          ]
+          rooms: rooms,
+          userId: user._id,
+          hotelId: hotelId
         });
         booking.save()
         .then(booking => {
@@ -122,14 +120,13 @@ class BookingHotel {
   };
 
   getTransactionWithId(req, res) {
-    const userId = req.query.userId;
-    // const id = new mongoose.Types.ObjectId(userId)
+    const userId = req.params.userId;
     Booking.find()
+      .populate('hotelId')
       .then(bookings => {
         try{
-          console.log('transaction', bookings)
           const userBooking = bookings.filter(booking => {
-            if(booking.user[0].userId.toString() === userId.toString()) {
+            if(booking.userId.toString() === userId.toString()) {
               return booking;
             }
           });

@@ -5,6 +5,10 @@ const schema = new mongoose.Schema({
     type: String,
     required: true
   },
+  title: {
+    type: String,
+    required: true
+  },
   type: {
     type: String,
     required: true
@@ -23,19 +27,23 @@ const schema = new mongoose.Schema({
   },
   photos: {
     type: Array,
-    required: false
+    required: true
   },
   desc: {
     type: String,
     required: true
   },
   rating: {
-    type: String,
+    type: Number,
     required: false
   },
   featured: {
     type: Boolean,
     required: false
+  },
+  price: {
+    type: Number,
+    required: true
   },
   rooms: [
     {

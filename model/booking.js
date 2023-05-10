@@ -2,15 +2,16 @@ import { Double } from 'bson';
 import mongoose from 'mongoose';
 
 const schema = new mongoose.Schema({
-  user: [
-    {
-      userId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
-        required: true,
-      }
-    }
-  ],
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true,
+  },
+  hotelId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Hotel',
+    required: true,
+  },
   startDate: {
     type: Date,
     required: true
@@ -27,21 +28,10 @@ const schema = new mongoose.Schema({
     type: Number,
     required: true
   },
-  rooms: [
-    {
-      roomId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Room',
-        required: true
-      },
-      roomNumber: [
-        {
-          type: Number,
-          required: true
-        }
-      ]
-    }
-  ],
+  rooms: {
+    type: Array,
+    required: true
+  },
   status: {
     type: String,
     required: true

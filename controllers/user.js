@@ -55,28 +55,29 @@ class UserController {
       .catch(err => res.status(400).json({ message: err }))
   };
 
-  adminSignIn(req, res) {
-    const email = req.body.email;
-    const password = req.body.password;
-    User.find()
-      .then(users => {
-        const findUser = users.some(user => {
-          if(user.email === email && user.password === password && user.isAdmin) {
-            return user;
-          }
-        })
-        if(findUser) {
-          userCurrent = email;
-          res.status(200).json({
-            message: 'ok',
-            user: findUser
-          })
-        }else {
-          res.status(400).json({ message: 'Invalid user!'})
-        }
-      })
-      .catch(err => res.status(400).json({ message: err }))
-  }
+  // adminSignIn(req, res) {
+  //   const email = req.body.email;
+  //   const password = req.body.password;
+  //   User.find()
+  //     .then(users => {
+  //       const findUser = users.some(user => {
+  //         if(user.email === email && user.password === password && user.isAdmin) {
+  //           return user;
+  //         }
+  //       })
+  //       console.log(findUser);
+  //       if(findUser) {
+  //         userCurrent = email;
+  //         res.status(200).json({
+  //           message: 'ok',
+  //           user: findUser
+  //         })
+  //       }else {
+  //         res.status(400).json({ message: 'Invalid user!'})
+  //       }
+  //     })
+  //     .catch(err => res.status(400).json({ message: err }))
+  // }
 
   getUserCurrent(req, res) {
     if(userCurrent) {

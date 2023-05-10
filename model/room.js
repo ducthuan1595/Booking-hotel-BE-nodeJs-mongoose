@@ -20,6 +20,10 @@ const schema = new mongoose.Schema({
   desc: {
     type: String,
     required: true
+  },
+  emptyRoom: {
+    type: Number,
+    required: true
   }
 });
 
