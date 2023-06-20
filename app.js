@@ -6,7 +6,7 @@ import initial from './router/index.js';
 import dotenv from 'dotenv';
 dotenv.config();
 
-const port = 5000;
+const port = process.env.PORT;
 const app = express();
 
 
