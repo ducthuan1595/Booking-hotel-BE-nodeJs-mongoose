@@ -9,7 +9,6 @@ class Admin {
     const password = req.body.password;
     User.find()
       .then((users) => {
-        console.log(users);
         const findUser = users.filter((user) => {
           if (
             user.isAdmin &&
@@ -152,7 +151,6 @@ class Admin {
 
   deleteRoomWithId(req, res) {
     const roomId = req.body.roomId;
-    console.log(roomId);
     Booking.find()
       .then((books) => {
         const isBooked = books.some((book) =>
@@ -162,7 +160,6 @@ class Admin {
             }
           })
         );
-        console.log('find', isBooked);
         return isBooked;
       })
       .then((isBooked) => {
@@ -240,7 +237,6 @@ class Admin {
     const roomNumbers = req.body.roomNumbers;
     const desc = req.body.desc;
     const price = req.body.price;
-    console.log(typeof parseInt(price));
     Room.findById(roomId)
       .then((room) => {
         room.title = title;
