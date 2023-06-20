@@ -20,6 +20,10 @@ app.use(express.json());
 
 initial(app);
 
+app.use('/', (req, res) => {
+  res.send('Hello world!')
+})
+
 mongoose.connect(process.env.ACCESS_URL_MONGODB)
   .then(res => {
     console.log('Connected to mongoDb!');
